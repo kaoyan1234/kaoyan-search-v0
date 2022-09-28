@@ -1,91 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>调剂搜索 | kaoyan1234</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <script src='https://cdn.jsdelivr.net/npm/meilisearch@latest/dist/bundles/meilisearch.umd.js'></script>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/meilisearch@latest/dist/bundles/meilisearch.umd.js"></script>
+    <script src="main.js"></script>
 </head>
 
 <body>
     <main class="container" id="app">
-        <div>
-            <h1 style="text-align:center">调剂搜索 - kaoyan1234</h1>
 
-            <input type="search" id="search" name="search" placeholder="Search" v-model="message" autofocus
-                @keyup.enter="msearch">
+        <h1 style="text-align: center">调剂搜索 - kaoyan1234</h1>
 
-            <fieldset>
-                <label for="switch">
-                    <input type="checkbox" id="switch" name="switch" role="switch" v-model="diff_school" />
-                    非校内调剂
-                </label>
-            </fieldset>
+        <input type="search" id="search" name="search" placeholder="专业、学校" autofocus @keyup.enter="msearch" />
+
+        <fieldset>
+            <label for="switch">
+                <input type="checkbox" id="switch" name="switch" role="switch" />
+                非校内调剂
+            </label>
+        </fieldset>
+
+        <div id="show">
+            <article id="busy" aria-busy="true"></article>
         </div>
-
-        <!-- <article aria-busy="true"></article> -->
-        <article v-for="item in items.hits">
-            {{ item.School }} - {{ item.Des }} - {{ item.Year }} <span v-if="! item.AMD">专硕</span> <br>
-            招生人数：{{ item.HC }} <span v-if="item.Same">校内调剂</span> {{ item.Same }}<br>
-            调剂专业：{{ item.Src.join("、") }} <br>
-            科目要求：{{ item.Subject.join("、") }} <br>
-            分数要求：总分 {{ item.Line.Sum }} 大分 {{ item.Line.Big }} 小分 {{ item.Line.Sma }} <br>
-            官网来源：<a :href="item.Link" target="_blank">{{ item.Link }}</a>
-            <div v-if='! item.PS==""'>备注：{{ item.PS }}</div>
-        </article>
-
     </main>
-    <script>
-        const client = new MeiliSearch({
-            host: 'http://127.0.0.1:7700',
-            apiKey: 'masterKey',
-        })
-        const index = client.index('tiaoji')
 
-        const { createApp } = Vue
-        const app = createApp({
-            data() {
-                return {
-                    message: '08',
-                    diff_school: true,
-                    items: {
-                        estimatedTotalHits: 0, hits: [], limit: 20, offset: 0, processingTimeMs: 0, query: ""
-                    },
-                    item: {
-                        Index: "",
-                        Year: "",
-                        School: "",
-                        AMD: true,
-                        Des: "",
-                        HC: 4,
-                        Index: "",
-                        Line: { Sum: 320, Big: 75, Sma: 50 },
-                        Link: "",
-                        PS: "",
-                        Same: false,
-                        School: "",
-                        Src: [],
-                        Subject: [],
-                        Year: ""
-                    }
-                }
-            },
-            methods: {
-                async msearch() {
-                    // this.items = await index.search(this.message, { filter: 'Same = ' + !this.diff_school })
-                    this.items = await index.search(this.message)
-                    await console.log(this.items)
-                }
-            }
-
-        })
-
-        app.mount('#app')
-    </script>
 </body>
 
 </html>

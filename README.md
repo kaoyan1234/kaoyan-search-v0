@@ -23,6 +23,8 @@ curl \
   -X POST 'http://localhost:7700/indexes/tiaoji/documents?primaryKey=Index' \
   -H 'Content-Type: application/json' \
   --data-binary @output.json
+
+curl -X POST 'http://124.222.100.88/indexes/tiaoji/documents?primaryKey=Index' -H 'Content-Type: application/json' --data-binary @output.json
 ```
 
 目前只有两条数据哈哈哈哈，剩下的我找办法补充
